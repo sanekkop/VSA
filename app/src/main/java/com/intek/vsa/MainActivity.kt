@@ -5,10 +5,10 @@ import android.content.Intent
 import android.graphics.Color
 import android.graphics.Typeface
 import android.os.Bundle
+import android.os.Handler
+import android.os.Message
 import android.view.Gravity
 import android.view.View
-import android.view.ViewGroup
-import android.widget.LinearLayout
 import android.widget.TableLayout
 import android.widget.TableRow
 import android.widget.TextView
@@ -22,6 +22,8 @@ import kotlinx.android.synthetic.main.activity_main.*
 import org.apache.http.Header
 import org.json.JSONArray
 import org.json.JSONObject
+import java.text.SimpleDateFormat
+import java.util.*
 
 class MainActivity : AppCompatActivity() {
 
@@ -58,11 +60,26 @@ class MainActivity : AppCompatActivity() {
             btnRefresh.visibility = View.VISIBLE
             RefreshStatus()
         }
+
+
     }
 
     fun RefreshStatus() {
         hadinfo.text = ""
         tkorr.text = ""
+        if (barcode != "" && barcode != "null")
+        {
+            var hours_string = Date().hours.toString()
+            if (hours_string.length == 1) {
+                hours_string = "0" + hours_string
+            }
+            var minuts_string = Date().minutes.toString()
+            if (minuts_string.length == 1) {
+                minuts_string = "0" + minuts_string
+            }
+            tvresult.text = ("$barcode обновлено $hours_string:$minuts_string")
+        }
+
         tableLayout.removeAllViewsInLayout()
         val table = TableLayout(this)
 
@@ -312,15 +329,26 @@ class MainActivity : AppCompatActivity() {
 
     fun RefreshCondition() {
         //обновим табличку
-        try {
-            GetStatus(barcode)
-        } catch (e: Exception) {
-            //tvresult?.text = e.toString()
-            tvresult.text = "Ошибка! Возможно не отсканировался штрих-код"
-
+       val runnable = Runnable {
+            while (true) {
+                val msg = handler.obtainMessage()
+                handler.sendMessage(msg)
+                Thread.sleep(60000)
+            }
+        }
+        val thread = Thread(runnable)
+        thread.start()
+    }
+    private var handler: Handler = object : Handler() {
+        override fun handleMessage(msg: Message) {
+            try {
+                GetStatus(barcode)
+            } catch (e: Exception) {
+                //tvresult?.text = e.toString()
+                tvresult.text = "Ошибка! Возможно не отсканировался штрих-код"
+            }
         }
     }
-
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == 0) {
