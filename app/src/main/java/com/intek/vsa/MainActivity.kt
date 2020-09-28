@@ -207,7 +207,6 @@ class MainActivity : AppCompatActivity() {
                         timekompl / 60 % 60
                     )
                 pocessLabel.text = "Комплект."
-                time_string = " (" + time_string + ")"
                 Employer = jsonArrayData.getJSONObject(jsonIndex).getString("employer2").toString()
                 rowLabels.setBackgroundColor(Color.GREEN)
             } else if (datespusk != "01.01.1753") {
@@ -229,7 +228,6 @@ class MainActivity : AppCompatActivity() {
                         timespusk / 60 % 60
                     )
                 pocessLabel.text = "Спускают"
-                time_string = " (" + time_string + ")"
                 Employer = jsonArrayData.getJSONObject(jsonIndex).getString("employer3").toString()
                 rowLabels.setBackgroundColor(Color.BLUE)
 
@@ -242,8 +240,7 @@ class MainActivity : AppCompatActivity() {
                         timenabOk / 60 % 60
                     )
                 pocessLabel.text = "Набрали"
-                time_string = " (" + time_string + ")"
-                Employer = jsonArrayData.getJSONObject(jsonIndex).getString("employer").toString()
+               Employer = jsonArrayData.getJSONObject(jsonIndex).getString("employer").toString()
                 rowLabels.setBackgroundColor(Color.YELLOW)
             } else if (datenabNach != "01.01.1753") {
                 val timenabNach = jsonArrayData.getJSONObject(jsonIndex).getString("time1").toInt()
@@ -254,12 +251,11 @@ class MainActivity : AppCompatActivity() {
                         timenabNach / 60 % 60
                     )
                 pocessLabel.text = "В наборе"
-                time_string = " (" + time_string + ")"
                 Employer = jsonArrayData.getJSONObject(jsonIndex).getString("employer").toString()
                 rowLabels.setBackgroundColor(Color.YELLOW)
             } else {
                 pocessLabel.text = "Ожидает набор"
-                time_string = "( : : )"
+                time_string = " : : "
                 rowLabels.setBackgroundColor(Color.MAGENTA)
                 textColorKorr = Color.BLACK
             }
